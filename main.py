@@ -24,7 +24,7 @@ def get_location_details(query):
     return loc_id, loc_type
 
 
-def get_restaurants(entity_id, entity_type):
+def get_restaurants(ent_id, ent_type):
 
     headers = {
         'Accept': 'application/json',
@@ -32,8 +32,8 @@ def get_restaurants(entity_id, entity_type):
     }
 
     params = (
-        ('entity_id', entity_type),
-        ('entity_type', entity_id),
+        ('entity_id', ent_id),
+        ('entity_type', ent_type),
     )
 
     response = requests.get('https://developers.zomato.com/api/v2.1/search', headers=headers, params=params)
@@ -46,8 +46,20 @@ if __name__ == '__main__':
     prompt = '> '
     print('Enter location to search')
     q = input(prompt)
+    print()
 
     entity_id, entity_type = get_location_details(q)
     data = get_restaurants(entity_id, entity_type)
 
-    print(data)
+    print("Restaurants in " + q.title() + " --\n")
+
+    for restaurant in data['restaurants']:
+        r = restaurant['restaurant']
+        print(r['name'].upper())
+        loc = r['location']
+        print(loc['locality'])
+        rating = r['user_rating']
+        print("Rating - " + str(rating['aggregate_rating']))
+
+        print()
+
