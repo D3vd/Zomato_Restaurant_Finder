@@ -24,8 +24,30 @@ def get_location_details(query):
     return loc_id, loc_type
 
 
+def get_restaurants(entity_id, entity_type):
+
+    headers = {
+        'Accept': 'application/json',
+        'user-key': zomato_api,
+    }
+
+    params = (
+        ('entity_id', entity_type),
+        ('entity_type', entity_id),
+    )
+
+    response = requests.get('https://developers.zomato.com/api/v2.1/search', headers=headers, params=params)
+
+    return response.json()
+
+
 if __name__ == '__main__':
 
-    entity_id, entity_type = get_location_details('new york')
+    prompt = '> '
+    print('Enter location to search')
+    q = input(prompt)
 
-    print(str(entity_id) + " " + entity_type)
+    entity_id, entity_type = get_location_details(q)
+    data = get_restaurants(entity_id, entity_type)
+
+    print(data)
